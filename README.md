@@ -40,6 +40,13 @@ npm run dev
 5. After the backend gets a URL like `https://inventory-management-api.onrender.com`, set `VITE_API_URL` to that URL and redeploy the frontend.
 6. Open the frontend Render URL. That is your hosted link.
 
+### If you create services manually in Render
+
+- Backend build command: `cd server && npm install && npm run build`
+- Backend start command: `cd server && npm start`
+- Frontend build command: `cd client && npm install && npm run build`
+- Frontend publish directory: `client/dist`
+
 ## Notes
 
 - Frontend env can be either `https://your-api.onrender.com` or `https://your-api.onrender.com/api`
