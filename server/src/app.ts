@@ -1,4 +1,4 @@
-import cors from "cors";
+import cors, { CorsOptions } from "cors";
 import express, { Express } from "express";
 
 import { errorHandler, notFoundHandler } from "./middleware/errorHandler";
@@ -7,8 +7,15 @@ import { categoryRoutes } from "./routes/categoryRoutes";
 import { healthRoutes } from "./routes/healthRoutes";
 import { inventoryRoutes } from "./routes/inventoryRoutes";
 
+const corsOptions: CorsOptions = {
+  origin: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
 const configureMiddleware = (app: Express) => {
-  app.use(cors());
+  app.use(cors(corsOptions));
+  app.options(/.*/, cors(corsOptions));
   app.use(express.json());
 };
 
