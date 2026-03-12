@@ -1,0 +1,81 @@
+@baseUrl = http://localhost:4000/api
+@email = inventory.http@example.com
+@password = secret123
+@name = Inventory HTTP Tester
+
+###
+# @name health
+GET {{baseUrl}}/health
+
+###
+# @name signup
+POST {{baseUrl}}/auth/signup
+Content-Type: application/json
+
+{
+  "name": "{{name}}",
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+###
+# @name login
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "{{email}}",
+  "password": "{{password}}"
+}
+
+###
+# @name me
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{login.response.body.$.token}}
+
+###
+# @name listCategories
+GET {{baseUrl}}/categories
+Authorization: Bearer {{login.response.body.$.token}}
+
+###
+# Optional: change the category name if you already created this once.
+# @name createCategory
+POST {{baseUrl}}/categories
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.token}}
+
+{
+  "name": "Stationery"
+}
+
+###
+# Uses the first available category from the seeded list for repeatable testing.
+# @name createInventoryItem
+POST {{baseUrl}}/inventory
+Content-Type: application/json
+Authorization: Bearer {{login.response.body.$.token}}
+
+{
+  "name": "Premium Notebook",
+  "description": "A5 ruled notebook for API testing",
+  "price": 14.5,
+  "categoryId": "{{listCategories.response.body.$.categories[0].id}}"
+}
+
+###
+# @name listInventory
+GET {{baseUrl}}/inventory?page=1&limit=6
+Authorization: Bearer {{login.response.body.$.token}}
+
+###
+# @name searchInventory
+GET {{baseUrl}}/inventory?page=1&limit=6&search=notebook
+Authorization: Bearer {{login.response.body.$.token}}
+
+###
+# Filters using the first category from the category list.
+# @name filterInventoryByCategory
+GET {{baseUrl}}/inventory?page=1&limit=6&categoryId={{listCategories.response.body.$.categories[0].id}}
+Authorization: Bearer {{login.response.body.$.token}}
+
